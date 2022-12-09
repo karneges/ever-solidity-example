@@ -6,10 +6,11 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./CrossContractInvocation.sol";
+import "./Structs.sol";
 
 
 contract Sample {
-    //2. 
+    //2.
     // static fileds
     address static rootAddress;
     uint16 static _nonce;
@@ -23,15 +24,15 @@ contract Sample {
         tvm.accept();
     }
 
-    //3. 
+    //3.
     // responsible function
     function getDetails() public view responsible returns (uint8) {
         uint8 returningValue = 2;
-        // in return statement responsible function can set value, bounce and flag like cross contract call
+        // in return statement responsible function can set value, bounce and flag like a cross contract call
         return {value:0, bounce: false, flag: 128} returningValue;
     }
 
-    //4. 
+    //4.
     // transfers https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/API.md#addresstransfer
     function makeTransfer(address _transferTo) public view {
         TvmCell stateInit;
@@ -91,18 +92,18 @@ contract Sample {
     function tvmObject() internal {
         tvm.accept();
         TvmCell initData = tvm.buildStateInit({
-                    // Solidity contarct, can be imported from another file
-                    contr: Sample,
-                    // static fileds of new contract
-                    varInit: {
-                        rootAddress: address(this)
-                    },
-                    // pubkey of new contract
-                    pubkey: 0,
-                    // code of contract TvmCell
-                    code: cotractCode
-                });
-        // and other tvm object properties 
+            // Solidity contarct, can be imported from another file
+            contr: Sample,
+            // static fileds of new contract
+            varInit: {
+                rootAddress: address(this)
+            },
+            // pubkey of new contract
+            pubkey: 0,
+            // code of contract TvmCell
+            code: cotractCode
+        });
+        // and other tvm object properties
     }
 
     // 10. cycles https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/API.md#range-based-for-loop
@@ -116,10 +117,14 @@ contract Sample {
         }
     }
 
+    function getMyStruct() public returns(Structs.MyStruct) {
+        return Structs.MyStruct();
+    }
+
     // 12. special methods https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/API.md#special-contract-functions
     receive() external {}
     fallback() external{}
     onBounce(TvmSlice body) external {}
     onTickTock(bool isTock) external {}
-    function onCodeUpgrade(TvmCell params /*any params, this function will cal by this contract*/) private {}
+    function onCodeUpgrade(TvmCell params /*any params, this function will be called by this contract*/) private {}
 }
