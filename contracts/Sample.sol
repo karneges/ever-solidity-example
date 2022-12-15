@@ -121,6 +121,17 @@ contract Sample {
         return Structs.MyStruct();
     }
 
+    function toSliceWithDecode(TvmCell _cell ) {
+        TvmSlice slicePayload = _payload.toSlice();
+
+        (, TvmCell originalSender) = slicePayload.decode(TvmCell, TvmCell);
+        handleSuccessDexTransfer(
+            _amount,
+            originalSender.toSlice().decode(address)
+        );
+        return;
+    }
+
     // 12. special methods https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/API.md#special-contract-functions
     receive() external {}
     fallback() external{}
